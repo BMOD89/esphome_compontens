@@ -1,0 +1,86 @@
+esphome:
+  name: d0
+  platform: ESP8266
+  board: d1_mini
+
+external_components:
+  - source:
+      type: local
+      path: components
+    components: [ d0 ]
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+captive_portal:
+
+# Enable logging
+logger:
+  hardware_uart: UART1
+  level: DEBUG
+
+# Enable Home Assistant API
+api:
+
+ota:
+
+uart:
+  id: uart_bus
+  tx_pin: GPIO1
+  rx_pin: GPIO3
+  baud_rate: 9600
+  data_bits: 7
+  parity: EVEN
+  stop_bits: 1
+
+d0:
+  id: myd0
+  uart_id: uart_bus
+
+sensor:
+  - platform: d0
+    name: "Total energy"
+    d0_id: myd0
+    obis_code: "1-0:1.8.0*255"
+    unit_of_measurement: kWh
+    accuracy_decimals: 4
+    device_class: energy
+    state_class: total_increasing
+
+  - platform: d0
+    name: "Total energy T1"
+    d0_id: myd0
+    obis_code: "1-0:1.8.1*255"
+    unit_of_measurement: kWh
+    accuracy_decimals: 4
+    device_class: energy
+    state_class: total_increasing
+
+  - platform: d0
+    name: "Total energy T2"
+    d0_id: myd0
+    obis_code: "1-0:1.8.2*255"
+    unit_of_measurement: kWh
+    accuracy_decimals: 4
+    device_class: energy
+    state_class: total_increasing
+
+  - platform: d0
+    name: "Active power"
+    d0_id: myd0
+    obis_code: "1-0:16.7.0*255"
+    unit_of_measurement: W
+    device_class: power
+    accuracy_decimals: 1
+
+text_sensor:
+  - platform: d0
+    name: "Meter ID"
+    d0_id: myd0
+    obis_code: "1-0:96.1.0*255"
+
+  - platform: d0
+    name: "Total energy String"
+    d0_id: myd0
+    obis_code: "1-0:1.8.0*255"
